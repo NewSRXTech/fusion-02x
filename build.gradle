@@ -1,0 +1,85 @@
+plugins {
+    id 'java'
+    id 'maven-publish'
+    id 'war'
+    id 'eclipse'
+	id 'eclipse-wtp'
+    // id 'org.gretty'
+    id 'org.springframework.boot'
+	id 'io.spring.dependency-management'
+	id 'com.vaadin'
+}
+
+
+repositories {
+    mavenCentral()
+    jcenter() // jcenter is deprecated, however the Gretty plugin still uses stuff from jcenter: https://github.com/gretty-gradle-plugin/gretty/issues/192
+    maven {
+        url = 'https://repo.maven.apache.org/maven2'
+    }
+
+    maven {
+        url = 'https://maven.vaadin.com/vaadin-addons'
+    }
+    maven { url 'https://repo.spring.io/snapshot' }
+    maven { url 'https://repo.spring.io/milestone' }
+}
+
+vaadin {
+	pnpmEnable = false
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    implementation 'org.springframework.boot:spring-boot-starter-web'    
+    
+    implementation 'com.vaadin:vaadin-spring-boot-starter:20.0.4'
+    
+    implementation 'com.vaadin:vaadin:20.0.4'
+    implementation 'org.vaadin.artur:a-vaadin-helper:1.6.2'
+    
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    
+    // testImplementation 'org.springframework.boot:spring-boot-starter-test:2.4.5'
+    // testImplementation 'com.vaadin:vaadin-testbench:20.0.4'
+    // testImplementation 'org.junit.vintage:junit-vintage-engine:5.7.1'
+    // testImplementation 'io.github.bonigarcia:webdrivermanager:4.4.0'
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "com.vaadin:vaadin-bom:${vaadinVersion}"
+	}
+}
+
+/*gretty {
+	// servletContainer = "jetty9"
+
+	httpsEnabled = true
+	scanInterval = 1
+	recompileOnSourceChange = true
+	reloadOnClassChange = true
+	reloadOnConfigChange = true
+	reloadOnLibChange = true
+	managedClassReload = false
+	
+	consoleLogEnabled = true
+	fileLogEnabled = true
+	loggingLevel = "ALL"
+	logDir="$projectDir/log"
+}*/
+
+group = 'com.newsrx.jam'
+version = '1.0-SNAPSHOT'
+description = 'Just Another (BUTTER™) Manager'
+
+defaultTasks("clean", "vaadinBuildFrontend", "build")
+
+compileJava.options.encoding = 'UTF-8'
+compileJava.options.release = 11
+
+compileTestJava.options.encoding = 'UTF-8'
+compileTestJava.options.release = 11
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(11)
+java.toolchain.vendor = JvmVendorSpec.ADOPTOPENJDK

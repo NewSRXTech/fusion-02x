@@ -1,0 +1,31 @@
+pluginManagement {
+  plugins {
+    id "org.wisepersist.gwt" version "1.1.11"
+    id "org.gretty" version "3.0.5"
+    id "com.diffplug.eclipse.apt" version "3.29.1"
+    id 'com.github.johnrengelman.shadow' version '6.1.0'
+    id "io.freefair.lombok" version "6.0.0-m2"
+    id "com.vaadin" version "20.0.4"
+    id 'org.springframework.boot' version '2.5.2'
+    id 'io.spring.dependency-management' version "1.0.11.RELEASE" 
+  }
+}
+
+rootProject.name = 'fusion-02x'
+
+String[] p=[];
+
+/*
+ * Dynamically locate loosely coupled project dependencies located in sibling folders.
+ */
+p.each { s->
+    include (":"+s);
+    boolean found=false;
+    File f;
+    f = new File(settingsDir,"../"+s); //preferred is side-by-side
+    found = new File(f, "build.gradle").exists();
+    if (!found) {
+        throw new RuntimeException("=== MISSING PROJECT: '"+s+"'");
+    }
+    project(":"+s).projectDir=f
+}
